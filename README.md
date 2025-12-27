@@ -1,4 +1,7 @@
-## Hi there 👋
+## Abouts Me
+
+- name: AkiEga
+- country: Japan
 
 <!--
 **AkiEga/AkiEga** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.

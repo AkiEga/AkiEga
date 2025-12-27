@@ -23,4 +23,4 @@ I'm passionate about technology and enjoy solving problems through code.
 
 **Note:** All repositories here are my personal projects and are not affiliated with any organization I belong to. 
 
-💡 *Always learning, always coding! *
+💡 *Always learning, always coding!*

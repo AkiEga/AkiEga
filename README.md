@@ -17,16 +17,16 @@ I'm a developer based in Japan 🇯🇵
 
 #### VS Code Extensions
 - [vscode-extension-tree](https://github.com/AkiEga/vscode-extension-tree)  
-  (Marketplace link: https://marketplace.visualstudio.com/items?itemName=akiega.tree)
+  (Marketplace link: [tree](https://marketplace.visualstudio.com/items?itemName=akiega.tree))
 
 - [vscode-extension-section-info](https://github.com/AkiEga/vscode-extension-section-info)  
-  (Marketplace link: https://marketplace.visualstudio.com/items?itemName=akiega.quick-copy-as-markdown)
+  (Marketplace link: [quick-copy-as-markdown](https://marketplace.visualstudio.com/items?itemName=akiega.quick-copy-as-markdown))
 
 - [vscode-msvs-proj-manager](https://github.com/AkiEga/vscode-msvs-proj-manager)  
-  (Marketplace link: https://marketplace.visualstudio.com/items?itemName=akiega.vscode-msvs-proj-manager)
+  (Marketplace link: [vscode-msvs-proj-manager](https://marketplace.visualstudio.com/items?itemName=akiega.vscode-msvs-proj-manager))
 
 - [file-open-history](https://github.com/AkiEga/file-open-history)  
-  (Marketplace link: https://marketplace.visualstudio.com/items?itemName=akiega.file-open-history)
+  (Marketplace link: [file-open-history](https://marketplace.visualstudio.com/items?itemName=akiega.file-open-history))
 
 #### Embedded Systems / Hardware
 - [pico_arcade_controller](https://github.com/AkiEga/pico_arcade_controller) — Arcade joystick controller built with Raspberry Pi Pico (USB HID). Supports mouse cursor movement, long-press acceleration, and window switching via rapid left/right inputs.

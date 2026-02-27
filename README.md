@@ -16,16 +16,16 @@ I'm a developer based in Japan 🇯🇵
 ### Tools I've Built
 
 #### VS Code Extensions
-- [vscode-extension-tree](https://github.com/AkiEga/vscode-extension-tree)  
+- [vscode-extension-tree](https://github.com/AkiEga/vscode-extension-tree) — A tree command tool utilizing VS Code GUI. Displays file/folder tree structure in the explorer sidebar and renders output as Markdown or in a webview panel.  
   (Marketplace link: [tree](https://marketplace.visualstudio.com/items?itemName=akiega.tree))
 
-- [vscode-extension-section-info](https://github.com/AkiEga/vscode-extension-section-info)  
+- [vscode-extension-section-info](https://github.com/AkiEga/vscode-extension-section-info) — Copies selected code section info (file path, line number, function name, git branch/commit) to clipboard in customizable formats (GitHub Markdown, JIRA, etc.).  
   (Marketplace link: [quick-copy-as-markdown](https://marketplace.visualstudio.com/items?itemName=akiega.quick-copy-as-markdown))
 
-- [vscode-msvs-proj-manager](https://github.com/AkiEga/vscode-msvs-proj-manager)  
+- [vscode-msvs-proj-manager](https://github.com/AkiEga/vscode-msvs-proj-manager) — Manages Microsoft Visual Studio solution files (.sln) within VS Code. Parses .sln files and opens terminals in project root directories.  
   (Marketplace link: [vscode-msvs-proj-manager](https://marketplace.visualstudio.com/items?itemName=akiega.vscode-msvs-proj-manager))
 
-- [file-open-history](https://github.com/AkiEga/file-open-history)  
+- [file-open-history](https://github.com/AkiEga/file-open-history) — Tracks and displays a history of file opening actions in VS Code, viewable in a text editor or output channel.  
   (Marketplace link: [file-open-history](https://marketplace.visualstudio.com/items?itemName=akiega.file-open-history))
 
 #### Embedded Systems / Hardware

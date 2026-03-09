@@ -4,7 +4,8 @@ import os
 import re
 import subprocess
 import sys
-from datetime import date
+from datetime import date, datetime
+from time import timezone
 
 import requests
 
@@ -158,16 +159,6 @@ def push_branch(branch, today):
     repo_full = os.getenv('GITHUB_REPOSITORY') or os.getenv('REPO') or ''
     remote_url = f'https://x-access-token:{TOKEN}@github.com/{repo_full}.git'
     subprocess.check_call(['git', 'remote', 'set-url', 'origin', remote_url])
-
-    # 既存ブランチがあれば削除してから再作成
-    existing = subprocess.run(
-        ['git', 'ls-remote', '--heads', 'origin', branch],
-        capture_output=True, text=True,
-    )
-    if existing.stdout.strip():
-        print(f'Remote branch {branch} already exists — deleting before re-push')
-        subprocess.check_call(['git', 'push', 'origin', f':{branch}'])
-
     subprocess.check_call(['git', 'checkout', '-b', branch])
     subprocess.check_call(['git', 'add', 'README.md'])
     subprocess.check_call(['git', 'commit', '-m',
@@ -227,7 +218,8 @@ def create_pr(branch, today):
 
 def main():
     today = str(date.today())
-    branch = f'update/vscode-extensions-{today}'
+    timestamp = datetime.now(timezone.utc).strftime('%H%M%S')
+    branch = f'update/vscode-extensions-{today}-{timestamp}'
 
     readme_path = os.path.join(os.getcwd(), 'README.md')
     if not os.path.exists(readme_path):

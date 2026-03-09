@@ -158,12 +158,37 @@ def push_branch(branch, today):
     repo_full = os.getenv('GITHUB_REPOSITORY') or os.getenv('REPO') or ''
     remote_url = f'https://x-access-token:{TOKEN}@github.com/{repo_full}.git'
     subprocess.check_call(['git', 'remote', 'set-url', 'origin', remote_url])
+
+    # 既存ブランチがあれば削除してから再作成
+    existing = subprocess.run(
+        ['git', 'ls-remote', '--heads', 'origin', branch],
+        capture_output=True, text=True,
+    )
+    if existing.stdout.strip():
+        print(f'Remote branch {branch} already exists — deleting before re-push')
+        subprocess.check_call(['git', 'push', 'origin', f':{branch}'])
+
     subprocess.check_call(['git', 'checkout', '-b', branch])
     subprocess.check_call(['git', 'add', 'README.md'])
     subprocess.check_call(['git', 'commit', '-m',
                            f'Update VS Code Extensions list ({today})'])
-    subprocess.check_call(['git', 'push', 'origin', branch])
+    result = subprocess.run(
+        ['git', 'push', 'origin', branch],
+        capture_output=True, text=True,
+    )
+    if result.returncode != 0:
+        print(f'git push failed:\n{result.stderr}', file=sys.stderr)
+        raise subprocess.CalledProcessError(result.returncode, 'git push')
     print(f'Pushed branch: {branch}')
+
+
+def find_existing_pr(owner, repo, branch):
+    """同じ head ブランチの open PR があれば URL を返す。なければ None。"""
+    url = f'https://api.github.com/repos/{owner}/{repo}/pulls?state=open&head={owner}:{branch}'
+    r = requests.get(url, headers=HEADERS)
+    if r.status_code == 200 and r.json():
+        return r.json()[0]['html_url']
+    return None
 
 
 def create_pr(branch, today):
@@ -173,6 +198,12 @@ def create_pr(branch, today):
         print(f'Cannot parse repo "{repo_full}" for PR creation', file=sys.stderr)
         return
     owner, repo = parts
+
+    existing_url = find_existing_pr(owner, repo, branch)
+    if existing_url:
+        print(f'Open PR already exists: {existing_url}')
+        return
+
     url = f'https://api.github.com/repos/{owner}/{repo}/pulls'
     payload = {
         'title': f'Update VS Code Extensions section ({today})',

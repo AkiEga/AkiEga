@@ -4,8 +4,7 @@ import os
 import re
 import subprocess
 import sys
-from datetime import date, datetime
-from time import timezone
+from datetime import date, datetime, timezone
 
 import requests
 

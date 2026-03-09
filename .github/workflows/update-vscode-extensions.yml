@@ -1,4 +1,4 @@
-name: Update VS Code Extensions in README (Copilot CLI)
+name: Update VS Code Extensions in README
 
 on:
   schedule:
@@ -11,19 +11,21 @@ concurrency:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   update-readme:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      # Copilot CLI requires a PAT with Copilot Requests permission stored as a repo secret
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Fine-grained PAT with Copilot Requests permission (repo secret: PERSONAL_ACCESS_TOKEN)
       COPILOT_GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       OWNER: ${{ github.repository_owner }}
       REPO: ${{ github.repository }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -33,11 +35,6 @@ jobs:
       - name: Install Copilot CLI
         run: npm install -g @github/copilot
 
-      - name: Run Copilot CLI to extract VS Code extensions
-        run: |
-          # Prompt Copilot CLI to produce a markdown bullet list of VS Code extensions
-          copilot -p "Scan this repository and output a Markdown bullet list of VS Code extensions only. For each extension output a single line formatted: '- [repo-name](repo-url) — short description'. Only include extensions that have extension package.json (engines.vscode or contributes). Do not add extra commentary." > copilot_extensions.md
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -46,9 +43,8 @@ jobs:
       - name: Install Python deps
         run: |
           python -m pip install --upgrade pip
+          pip install requests
 
-      - name: Update README using Copilot output
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update README and create PR
         run: |
-          python scripts/update_vscode_extensions.py --input copilot_extensions.md
+          python scripts/update_vscode_extensions.py

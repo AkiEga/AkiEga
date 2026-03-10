@@ -48,3 +48,41 @@ jobs:
       - name: Update README and create PR
         run: |
           python scripts/update_vscode_extensions.py
+
+      - name: Check for README changes
+        id: changes
+        run: |
+          git status --porcelain
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create branch, commit and push
+        if: steps.changes.outputs.changed == 'true'
+        id: create_branch
+        run: |
+          BRANCH=update/vscode-extensions-$(date -u +%F-%H%M%S)
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b $BRANCH
+          git add README.md
+          git commit -m "Update VS Code Extensions list ($BRANCH)" || echo "no commit"
+          git push origin $BRANCH
+
+      - name: Create Pull Request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Update VS Code Extensions section"
+          body: |
+            Automated update of the VS Code Extensions section.
+            Detection criteria:
+            - Repository name starts with `vscode-extension`
+            - Repository topics contain `vscode-extension`
+          head: ${{ steps.create_branch.outputs.branch }}
+          base: main
+          labels: automated

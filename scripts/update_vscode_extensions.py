@@ -154,65 +154,7 @@ def git_setup():
                            '41898282+github-actions[bot]@users.noreply.github.com'])
 
 
-def push_branch(branch, today):
-    repo_full = os.getenv('GITHUB_REPOSITORY') or os.getenv('REPO') or ''
-    remote_url = f'https://x-access-token:{TOKEN}@github.com/{repo_full}.git'
-    subprocess.check_call(['git', 'remote', 'set-url', 'origin', remote_url])
-    subprocess.check_call(['git', 'checkout', '-b', branch])
-    subprocess.check_call(['git', 'add', 'README.md'])
-    subprocess.check_call(['git', 'commit', '-m',
-                           f'Update VS Code Extensions list ({today})'])
-    result = subprocess.run(
-        ['git', 'push', 'origin', branch],
-        capture_output=True, text=True,
-    )
-    if result.returncode != 0:
-        print(f'git push failed:\n{result.stderr}', file=sys.stderr)
-        raise subprocess.CalledProcessError(result.returncode, 'git push')
-    print(f'Pushed branch: {branch}')
-
-
-def find_existing_pr(owner, repo, branch):
-    """同じ head ブランチの open PR があれば URL を返す。なければ None。"""
-    url = f'https://api.github.com/repos/{owner}/{repo}/pulls?state=open&head={owner}:{branch}'
-    r = requests.get(url, headers=HEADERS)
-    if r.status_code == 200 and r.json():
-        return r.json()[0]['html_url']
-    return None
-
-
-def create_pr(branch, today):
-    repo_full = os.getenv('GITHUB_REPOSITORY') or os.getenv('REPO') or ''
-    parts = repo_full.split('/')
-    if len(parts) != 2:
-        print(f'Cannot parse repo "{repo_full}" for PR creation', file=sys.stderr)
-        return
-    owner, repo = parts
-
-    existing_url = find_existing_pr(owner, repo, branch)
-    if existing_url:
-        print(f'Open PR already exists: {existing_url}')
-        return
-
-    url = f'https://api.github.com/repos/{owner}/{repo}/pulls'
-    payload = {
-        'title': f'Update VS Code Extensions section ({today})',
-        'head': branch,
-        'base': 'main',
-        'body': (
-            '## Automated update\n\n'
-            'This PR was automatically created by the daily workflow.\n\n'
-            '### Detection criteria\n'
-            '- Repository name starts with `vscode-extension`, **or**\n'
-            '- Repository topics contain `vscode-extension`\n'
-        ),
-    }
-    r = requests.post(url, headers=HEADERS, json=payload)
-    if r.status_code == 201:
-        print(f'PR created: {r.json()["html_url"]}')
-    else:
-        print(f'PR creation failed ({r.status_code}): {r.text}', file=sys.stderr)
-        sys.exit(1)
+# Git operations moved to the GitHub Actions workflow. The script only updates README.
 
 
 def main():

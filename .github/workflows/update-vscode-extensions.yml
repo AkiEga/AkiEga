@@ -72,17 +72,15 @@ jobs:
           git commit -m "Update VS Code Extensions list ($BRANCH)" || echo "no commit"
           git push origin $BRANCH
 
-      - name: Create Pull Request
+      - name: Create Pull Request (using gh CLI)
         if: steps.changes.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Update VS Code Extensions section"
-          body: |
-            Automated update of the VS Code Extensions section.
-            Detection criteria:
-            - Repository name starts with `vscode-extension`
-            - Repository topics contain `vscode-extension`
-          head: ${{ steps.create_branch.outputs.branch }}
-          base: main
-          labels: automated
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ steps.create_branch.outputs.branch }}
+        run: |
+          # Authenticate gh with the provided token
+          echo "$GITHUB_TOKEN" | gh auth login --with-token
+          gh pr create \
+            --title "Update VS Code Extensions section" \
+            --body "Automated update of the VS Code Extensions section.\n\nDetection criteria:\n- Repository name starts with `vscode-extension`\n- Repository topics contain `vscode-extension`" \
+           --head "$BRANCH" --base main || echo "PR creation skipped or failed"

@@ -148,12 +148,6 @@ def replace_section(readme_path, entries):
     return False
 
 
-def git_setup():
-    subprocess.check_call(['git', 'config', 'user.name', 'github-actions[bot]'])
-    subprocess.check_call(['git', 'config', 'user.email',
-                           '41898282+github-actions[bot]@users.noreply.github.com'])
-
-
 # Git operations moved to the GitHub Actions workflow. The script only updates README.
 
 
@@ -175,11 +169,6 @@ def main():
     if not changed:
         print('No update required')
         return
-
-    git_setup()
-    push_branch(branch, today)
-    create_pr(branch, today)
-
 
 if __name__ == '__main__':
     main()

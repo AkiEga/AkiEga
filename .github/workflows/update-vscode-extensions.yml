@@ -81,5 +81,5 @@ jobs:
           # Use the existing GITHUB_TOKEN (no interactive login / credential storage)
           gh pr create \
             --title "Update VS Code Extensions section" \
-            --body "Automated update of the VS Code Extensions section.\n\nDetection criteria:\n- Repository name starts with `vscode-extension`\n- Repository topics contain `vscode-extension`" \
+            --body "Automated update of the VS Code Extensions section.\n\nDetection criteria:\n- Repository name starts with \`vscode-extension\`\n- Repository topics contain \`vscode-extension\`" \
            --head "$BRANCH" --base main || echo "PR creation skipped or failed"
